@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginSchema } from "./validations/loginSchema";
+import { registerSchema } from "./validations/registerSchema";
 import {
   Form,
   FormControl,
@@ -14,40 +14,62 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const ManageLoginPage = () => {
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+const ManageRegisterPage = () => {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
-      keyword: "",
+      username: "",
+      email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = (value: z.infer<typeof loginSchema>) => {
+  const onSubmit = (value: z.infer<typeof registerSchema>) => {
     console.log(value);
   };
 
   const isButtonDisabled =
-    form.getValues().keyword === "" || form.getValues().password === "";
+    form.getValues().email === "" ||
+    form.getValues().username === "" ||
+    form.getValues().password === "" ||
+    form.getValues().confirmPassword === "";
 
   return (
     <div className="text-white">
       <div className="pl-3">
-        <p className="font-bold text-2xl">Login</p>
+        <p className="font-bold text-2xl">Register</p>
       </div>
       <div className="mt-5">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
-              name="keyword"
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
                       type="text"
                       variant="primary"
-                      placeholder="Email/Username"
+                      placeholder="Enter Email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      variant="primary"
+                      placeholder="Create Username"
                       {...field}
                     />
                   </FormControl>
@@ -64,7 +86,24 @@ const ManageLoginPage = () => {
                     <Input
                       type="password"
                       variant="primary"
-                      placeholder="Password"
+                      placeholder="Create Password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      variant="primary"
+                      placeholder="Confirm Password"
                       {...field}
                     />
                   </FormControl>
@@ -90,11 +129,9 @@ const ManageLoginPage = () => {
         </Form>
         <div className="mt-14 w-full">
           <p className="text-center text-sm font-medium">
-            No account?{" "}
-            <span className="gradient-golden-text underline">
-              <a href={"/register"} className="underline">
-                Register here
-              </a>
+            Have an account?{" "}
+            <span className="gradient-golden-text">
+              <a href={"/login"}>Login here</a>
             </span>
           </p>
         </div>
@@ -103,4 +140,4 @@ const ManageLoginPage = () => {
   );
 };
 
-export default ManageLoginPage;
+export default ManageRegisterPage;
