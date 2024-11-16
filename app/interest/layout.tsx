@@ -4,12 +4,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import React from "react";
 
-interface layotutProps {
+interface LayoutProps {
   children: React.ReactNode;
   onSave: () => void;
 }
 
-const layout = ({ children, onSave }: layotutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children, onSave }) => {
   return (
     <InterestLayout>
       <div className="pt-10 px-6 text-white">
@@ -37,4 +37,4 @@ const layout = ({ children, onSave }: layotutProps) => {
   );
 };
 
-export default layout;
+export default Layout;
