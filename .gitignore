@@ -31,6 +31,22 @@ yarn-error.log*
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# PWA specific files (like the cache or manifest)
+/public/manifest.json
+/public/service-worker.js
+/public/workbox-*
+
+# MacOS system files
+.DS_Store
+
+# Linux system files
+.directory
+
+# Windows system files
+Thumbs.db
+
+# Next.js PWA related files
+*.sw.*
+
+# Test snapshots
+*.snap
