@@ -26,6 +26,8 @@
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
     --dark: 201 49% 7%;
+    --dark-grey: 199 30% 12%;
+    --midnight-blue: 201 38% 9%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -96,4 +98,42 @@
   -webkit-background-clip: text; /* For Safari */
   background-clip: text;
   color: transparent;
+}
+
+.gradient-blue-text {
+  background: linear-gradient(
+    134.86deg,
+    #abfffd 2.64%,
+    #4599db 102.4%,
+    #aadaff 102.4%
+  );
+  -webkit-background-clip: text; /* For Safari */
+  background-clip: text;
+  color: transparent;
+}
+
+.no-scrollbar {
+  overflow: scroll;
+  padding-right: 15px; /* Sesuaikan padding agar ruang kosong muncul di sebelah kanan */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* For WebKit-based browsers (Chrome, Safari) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* For Edge and IE */
+input[type="number"] {
+  appearance: none;
 }
