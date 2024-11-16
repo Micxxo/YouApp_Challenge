@@ -1,6 +1,5 @@
 "use client";
 import HomeLayout from "@/components/layouts/HomeLayout";
-import ExpandableInfoCard from "@/components/molecules/ExpandableInfoCard ";
 import ProfileViewer from "@/components/organism/ProfileViewer";
 import React, { useEffect, useState } from "react";
 import ProfileEditor from "./components/ProfileEditor";
