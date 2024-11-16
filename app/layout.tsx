@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="h-screen">
+        <main className="h-screen overflow-hidden">
           <Providers>
             <Section className="h-full">{children}</Section>
           </Providers>
