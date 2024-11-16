@@ -1,5 +1,5 @@
 "use client";
-import GlassBadge from "@/components/molecules/glassBadge";
+import GlassBadge from "@/components/molecules/GlassBadge";
 import { Input } from "@/components/ui/input";
 import React from "react";
 
