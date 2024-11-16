@@ -8,7 +8,9 @@ type HomeLayoutProps = {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   return (
     <MainLayout>
-      <div className="h-full bg-dark text-white px-5 py-10">{children}</div>
+      <div className="h-full bg-dark text-white px-5 py-10 overflow-y-auto no-scrollbar">
+        {children}
+      </div>
     </MainLayout>
   );
 };
