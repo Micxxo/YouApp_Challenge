@@ -1,7 +1,7 @@
 "use client";
 import GlassBadge from "@/components/molecules/GlassBadge";
 import { Button } from "@/components/ui/button";
-// import GlassBadge from "@/components/molecules/glassBadge";
+// import GlassBadge from "@/components/molecules/GlassBadge";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
