@@ -8,7 +8,9 @@ type AuthLayoutProps = {
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
     <MainLayout>
-      <div className="bg-auth-radial h-full pt-40 px-5">{children}</div>
+      <div className="bg-auth-radial h-full pt-40 px-5 overflow-y-auto no-scrollbar">
+        {children}
+      </div>
     </MainLayout>
   );
 };

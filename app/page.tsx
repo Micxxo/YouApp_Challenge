@@ -1,9 +1,7 @@
+import HomeLayout from "@/components/layouts/HomeLayout";
+import ManageHomePage from "@/components/templates/home/ManageHomePage";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Button>tes</Button>
-    </main>
-  );
+  return <ManageHomePage />;
 }
