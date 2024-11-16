@@ -10,7 +10,8 @@ export interface InputProps
   isError?: FieldError | undefined | string;
   searchIconPos?: "right" | "left";
   searchIconClass?: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "glass" | "transparent";
+  containerClass?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -23,6 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       searchIconPos,
       searchIconClass,
       variant,
+      containerClass,
       ...props
     },
     ref
@@ -34,7 +36,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className="relative flex items-center">
+      <div className={twMerge("relative flex items-center", containerClass)}>
         <input
           type={type === "password" && showPassword ? "text" : type}
           className={cn(
@@ -43,6 +45,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             variant === "primary" && "bg-[#FFFFFF0F] rounded-lg !py-4",
             variant === "secondary" &&
               "bg-[#D9D9D90F] border border-[#FFFFFF38] rounded-[8px]",
+            variant === "glass" &&
+              "bg-[#D9D9D90F] rounded-[10px] px-3 py-1 text-white",
+            variant === "transparent" &&
+              "bg-transparent rounded-[10px] px-3 py-1 text-white",
             isError
               ? "border-red-600 !bg-red-50 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               : "focus-visible:ring-ring",
