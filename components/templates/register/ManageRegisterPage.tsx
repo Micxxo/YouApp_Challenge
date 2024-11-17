@@ -76,7 +76,7 @@ const ManageRegisterPage = () => {
     loading;
 
   return (
-    <div className="text-white">
+    <div className="text-white pb-10">
       <div className="pl-3">
         <p className="font-bold text-2xl">Register</p>
       </div>

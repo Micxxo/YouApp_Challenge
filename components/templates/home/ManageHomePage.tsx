@@ -45,10 +45,6 @@ const ManageHomePage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log(profileStore.profile);
-  }, [profileStore]);
-
   return (
     <HomeLayout>
       <div className="w-full h-[90%] flex flex-col">

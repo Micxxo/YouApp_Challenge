@@ -48,7 +48,7 @@ const ManageLoginPage = () => {
     form.getValues().keyword === "" || form.getValues().password === "";
 
   return (
-    <div className="text-white">
+    <div className="text-white pb-10">
       <div className="pl-3">
         <p className="font-bold text-2xl">Login</p>
       </div>

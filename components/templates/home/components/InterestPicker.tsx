@@ -22,9 +22,12 @@ const InterestPicker = () => {
       <div className="mt-5">
         {existedInterest?.length !== 0 && existedInterest ? (
           <div className="flex items-center gap-2 flex-wrap">
-            {existedInterest.map((interest) => {
+            {existedInterest.map((interest, key) => {
               return (
-                <Badge className="bg-[#FFFFFF0F] rounded-full text-white py-2 px-4">
+                <Badge
+                  key={key}
+                  className="bg-[#FFFFFF0F] rounded-full text-white py-2 px-4"
+                >
                   {interest}
                 </Badge>
               );

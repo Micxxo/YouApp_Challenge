@@ -86,9 +86,10 @@ const ManageInterestPage = () => {
         </h1>
         <div className="mt-8 w-full bg-[#D9D9D90F] rounded-[10px] px-4 py-3">
           <div className="flex flex-wrap gap-1">
-            {selectables.map((item) => {
+            {selectables.map((item, key) => {
               return (
                 <GlassBadge
+                  key={key}
                   onDelete={() => handleRemoveSelectable(item)}
                   title={item}
                 />

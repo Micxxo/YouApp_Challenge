@@ -104,8 +104,6 @@ const ProfileEditor = () => {
       username: value.name,
       weight: value.weight,
     };
-    console.log(payload);
-    console.log(value);
 
     updateProfile.mutateAsync(payload, {
       onSuccess: (data) => {
@@ -392,38 +390,40 @@ const ProfileEditor = () => {
                   control={profileForm.control}
                   name="birthday"
                   render={({ field }) => (
-                    <FormItem className="flex items-center w-full">
-                      <FormLabel className="text-xs w-32 font-medium text-white/35">
-                        Birthday
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              className={cn(
-                                "flex-1 py-3 !h-fit justify-end text-left font-normal !bg-[#D9D9D90F] border !border-[#FFFFFF38] rounded-[8px]",
-                                field.value ? "text-white" : "!text-[#575A5C]"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>HH MM YYYY</span>
-                              )}
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(value) =>
-                              value && profileForm.setValue("birthday", value)
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                    <FormItem>
+                      <div className="flex items-center w-full">
+                        <FormLabel className="text-xs w-32 font-medium text-white/35">
+                          Birthday
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                className={cn(
+                                  "flex-1 py-3 !h-fit justify-end text-left font-normal !bg-[#D9D9D90F] border !border-[#FFFFFF38] rounded-[8px]",
+                                  field.value ? "text-white" : "!text-[#575A5C]"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>HH MM YYYY</span>
+                                )}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(value) =>
+                                value && profileForm.setValue("birthday", value)
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
                       <FormMessage className="text-right" />
                     </FormItem>
                   )}
