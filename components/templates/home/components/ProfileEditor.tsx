@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
   CommandGroup,
@@ -30,7 +30,6 @@ import { z } from "zod";
 import { profileSchema } from "../validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getZodiacAndHoroscope } from "@/helpers/getZodiacAndHoroscopeHelper";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import {
@@ -39,40 +38,106 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import {
+  useCreateProfile,
+  useUpdateProfile,
+} from "../services/fetchProfile.service";
+import { ProfilePostProps } from "@/types/service";
+import { useProfileStore } from "../stores/profileStore";
+import toastHelper from "@/helpers/toastHelper";
+import { useSession } from "next-auth/react";
+import { getAgeHelper } from "@/helpers/getAgeHelper";
+import { useQueryClient } from "react-query";
+import {
+  getStorageDataByEmail,
+  updateStoreDataByEmail,
+} from "@/helpers/storageHelper";
 
 const ProfileEditor = () => {
+  const queryClient = useQueryClient();
+  const { data: session, update: sessionUpdate } = useSession();
+
+  const existedPfp = getStorageDataByEmail(session?.user.email ?? "")?.pfp;
+  const existedGender = getStorageDataByEmail(
+    session?.user.email ?? ""
+  )?.gender;
+
   const [accordionItemOpen, setAccordionOpenItem] = useState<
     string | undefined
   >(undefined);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const profileStore = useProfileStore();
+  const [profileImage, setProfileImage] = useState<string | null>(
+    existedPfp ?? profileStore.profile.picture ?? null
+  );
+  const updateProfile = useUpdateProfile();
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      profile: undefined,
-      birthday: new Date(),
-      gender: "",
-      height: "",
-      name: "",
-      weight: "",
-      zodiac: "",
-      horoscope: "",
+      profile: existedPfp ?? profileStore.profile.picture ?? "",
+      birthday: profileStore.profile.birthday
+        ? new Date(profileStore.profile.birthday)
+        : undefined,
+      gender: existedGender ?? profileStore.profile.gender ?? "",
+      height: parseInt(profileStore.profile.height) ?? undefined,
+      name: profileStore.profile.username ?? "",
+      weight: parseInt(profileStore.profile.weight) ?? "",
+      zodiac: profileStore.profile.zodiac ?? "",
+      horoscope: profileStore.profile.horoscope ?? "",
     },
   });
 
-  const { watch, setValue } = profileForm;
-  const formValues = watch();
+  const isProfileCreated =
+    profileStore.profile.birthday &&
+    profileStore.profile.horoscope !== "" &&
+    profileStore.profile.zodiac !== "" &&
+    profileStore.profile.height !== "" &&
+    profileStore.profile.weight !== "";
 
   const handleProfileSubmit = (value: z.infer<typeof profileSchema>) => {
-    console.log(value);
-  };
+    const loadingToast = toastHelper("updating...", "loading");
 
-  // generate horoscope and zodiac
-  useEffect(() => {
-    const { zodiac, horoscope } = getZodiacAndHoroscope(formValues.birthday);
-    setValue("zodiac", zodiac);
-    setValue("horoscope", horoscope);
-  }, [formValues.birthday, setValue]);
+    const payload: ProfilePostProps = {
+      birthday: format(new Date(value.birthday.toString()), "MM-dd-yyyy"),
+      height: value.height,
+      interests: profileStore.profile.interests,
+      username: value.name,
+      weight: value.weight,
+    };
+    console.log(payload);
+    console.log(value);
+
+    updateProfile.mutateAsync(payload, {
+      onSuccess: (data) => {
+        const dataToStore: Profile = {
+          ...data.data,
+          gender: profileForm.getValues().gender,
+          picture: profileForm.getValues().profile,
+        };
+
+        profileStore.setProfile(dataToStore);
+        updateStoreDataByEmail(session?.user.email ?? "", {
+          gender: dataToStore.gender ?? "",
+          pfp: dataToStore.picture ?? "",
+        });
+
+        sessionUpdate({
+          ...session,
+          user: {
+            ...session?.user,
+            gender: dataToStore.gender,
+          },
+        });
+
+        queryClient.invalidateQueries();
+        toastHelper(data.message, "success", "", loadingToast);
+      },
+      onError: (error) => {
+        console.error("Error updating profile:", error);
+        toastHelper("Error updating profile", "error", "", loadingToast);
+      },
+    });
+  };
 
   return (
     <Form {...profileForm}>
@@ -118,11 +183,54 @@ const ProfileEditor = () => {
                 <h1 className="text-sm font-bold">About</h1>
 
                 {accordionItemOpen !== "profile" && (
-                  <div className="mt-3">
-                    <p className="font-medium text-sm text-white/50">
-                      Add in your to help others know you better
-                    </p>
-                  </div>
+                  <>
+                    {isProfileCreated ? (
+                      <div className="space-y-2 mt-3">
+                        <h1 className="text-xs font-medium text-white/30">
+                          Birthday:{" "}
+                          <span className="text-white font-medium text-xs">
+                            {format(
+                              new Date(
+                                profileStore.profile.birthday.toString()
+                              ),
+                              "MM-dd-yyyy"
+                            )}{" "}
+                            (Age {getAgeHelper(profileStore.profile.birthday)})
+                          </span>
+                        </h1>
+                        <h1 className="text-xs font-medium text-white/30">
+                          Horoscope:{" "}
+                          <span className="text-white font-medium text-xs">
+                            {profileStore.profile.horoscope}
+                          </span>
+                        </h1>
+                        <h1 className="text-xs font-medium text-white/30">
+                          Zodiac:{" "}
+                          <span className="text-white font-medium text-xs">
+                            {profileStore.profile.zodiac}
+                          </span>
+                        </h1>
+                        <h1 className="text-xs font-medium text-white/30">
+                          Height:{" "}
+                          <span className="text-white font-medium text-xs">
+                            {profileStore.profile.height} cm
+                          </span>
+                        </h1>
+                        <h1 className="text-xs font-medium text-white/30">
+                          Weight:{" "}
+                          <span className="text-white font-medium text-xs">
+                            {profileStore.profile.weight}
+                          </span>
+                        </h1>
+                      </div>
+                    ) : (
+                      <div className="mt-3">
+                        <p className="font-medium text-sm text-white/50">
+                          Add in your to help others know you better
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </AccordionTrigger>
@@ -158,7 +266,7 @@ const ProfileEditor = () => {
                             htmlFor="profile"
                             className="text-xs w-32 font-medium text-white cursor-pointer "
                           >
-                            Add image
+                            {profileImage ? "Update image" : "Add image"}
                           </FormLabel>
                           <input
                             id="profile"
@@ -168,9 +276,13 @@ const ProfileEditor = () => {
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                const imageUrl = URL.createObjectURL(file);
-                                setProfileImage(imageUrl);
-                                field.onChange(file);
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                  const base64 = reader.result as string;
+                                  setProfileImage(base64);
+                                  field.onChange(base64);
+                                };
+                                reader.readAsDataURL(file);
                               }
                             }}
                             onBlur={field.onBlur}
@@ -395,12 +507,18 @@ const ProfileEditor = () => {
                               containerClass="flex-1"
                               className="py-3 pl-4 pr-0 !w-full text-right !rounded-tr-none !rounded-br-none !border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="Height"
-                              {...field}
+                              value={field.value || ""}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(
+                                  value === "" ? undefined : Number(value)
+                                );
+                              }}
                             />
                             <div
                               className={cn(
                                 "rounded-tr-[8px] rounded-br-[8px] bg-[#D9D9D90F] border border-[#FFFFFF38] py-3 px-2 !border-l-0",
-                                field.value === ""
+                                field.value === undefined
                                   ? "text-[#565A5C]"
                                   : "text-white"
                               )}
@@ -435,12 +553,18 @@ const ProfileEditor = () => {
                               containerClass="flex-1"
                               className="py-3 pl-4 pr-0 !w-full text-right !rounded-tr-none !rounded-br-none !border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                               placeholder="weight"
-                              {...field}
+                              value={field.value || ""}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(
+                                  value === "" ? undefined : Number(value)
+                                );
+                              }}
                             />
                             <div
                               className={cn(
                                 "rounded-tr-[8px] rounded-br-[8px] bg-[#D9D9D90F] border border-[#FFFFFF38] py-3 px-2 !border-l-0",
-                                field.value === ""
+                                field.value === undefined
                                   ? "text-[#565A5C]"
                                   : "text-white"
                               )}

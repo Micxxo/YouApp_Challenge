@@ -37,8 +37,8 @@ const authOptions: AuthOptions = {
         if (res.ok && data.access_token) {
           const user: User = {
             id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            email: credentials?.keyword + "@email.com",
-            name: credentials?.keyword + " - name",
+            email: isEmail ? credentials?.keyword ?? "" : "dummyemail@com",
+            name: isEmail ? "dummy name" : credentials?.keyword ?? "",
             access_token: data.access_token,
           };
 
@@ -53,6 +53,7 @@ const authOptions: AuthOptions = {
     async jwt({ token, user, trigger, session }) {
       if (trigger === "update") {
         if (session?.user.name) token.name = session?.user.name;
+        if (session?.user.email) token.email = session?.user.email;
         if (session?.user.access_token)
           token.accessToken = session?.user.access_token;
       }
