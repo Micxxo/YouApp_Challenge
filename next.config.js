@@ -8,5 +8,9 @@ const withPWA = require("next-pwa")({
 //   disable: process.env.NODE_ENV === "development",
 
 module.exports = withPWA({
-  reactStrictMode: true,
+  reactStrictMode: false,
+  env: {
+    SECRET: process.env.SECRET,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  },
 });

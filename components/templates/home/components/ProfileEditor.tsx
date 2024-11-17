@@ -30,7 +30,7 @@ import { z } from "zod";
 import { profileSchema } from "../validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getZodiacAndHoroscope } from "@/helpers/getZodiacAndHoroscope";
+import { getZodiacAndHoroscope } from "@/helpers/getZodiacAndHoroscopeHelper";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import {

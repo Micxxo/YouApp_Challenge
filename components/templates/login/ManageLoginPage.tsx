@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,8 +13,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import toastHelper from "@/helpers/toastHelper";
 
 const ManageLoginPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -23,8 +30,29 @@ const ManageLoginPage = () => {
     },
   });
 
-  const onSubmit = (value: z.infer<typeof loginSchema>) => {
-    console.log(value);
+  const handleSubmit = async (value: z.infer<typeof loginSchema>) => {
+    setLoading(true);
+    const loadingToast = toastHelper("sasa", "loading");
+
+    const signInPromise = signIn("credentials", {
+      redirect: false,
+      keyword: value.keyword,
+      password: value.password,
+    });
+
+    try {
+      const res = await signInPromise;
+      if (res?.ok) {
+        setError(null);
+        router.push("/");
+      } else {
+        console.log(res);
+        toastHelper(res?.error ?? "", "error", "", loadingToast);
+        setError(res?.error ?? "Unexpected Error");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isButtonDisabled =
@@ -37,7 +65,10 @@ const ManageLoginPage = () => {
       </div>
       <div className="mt-5">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-3"
+          >
             <FormField
               control={form.control}
               name="keyword"
@@ -78,7 +109,7 @@ const ManageLoginPage = () => {
                 className="!w-full relative z-10"
                 variant={"glow"}
                 size="lg"
-                disabled={isButtonDisabled}
+                disabled={isButtonDisabled || loading}
               >
                 Login
               </Button>
