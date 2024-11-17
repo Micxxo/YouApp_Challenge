@@ -47,6 +47,8 @@ Thumbs.db
 
 # Next.js PWA related files
 *.sw.*
+/public/*.sw.*
+/public/.sw.*
 
 # Test snapshots
 *.snap
