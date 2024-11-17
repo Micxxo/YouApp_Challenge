@@ -13,14 +13,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toastHelper from "@/helpers/toastHelper";
+import { loginHooks } from "@/services/hooks/auth/login";
 
 const ManageLoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -31,24 +31,13 @@ const ManageLoginPage = () => {
   });
 
   const handleSubmit = async (value: z.infer<typeof loginSchema>) => {
-    setLoading(true);
     const loadingToast = toastHelper("sasa", "loading");
-
-    const signInPromise = signIn("credentials", {
-      redirect: false,
-      keyword: value.keyword,
-      password: value.password,
-    });
-
     try {
-      const res = await signInPromise;
+      const res = await loginHooks(value);
       if (res?.ok) {
-        setError(null);
         router.push("/");
       } else {
-        console.log(res);
         toastHelper(res?.error ?? "", "error", "", loadingToast);
-        setError(res?.error ?? "Unexpected Error");
       }
     } finally {
       setLoading(false);
