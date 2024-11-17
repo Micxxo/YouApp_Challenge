@@ -14,7 +14,7 @@ const GlassBadge = ({ title, className, onDelete }: GlassBadge) => {
   return (
     <Badge
       className={twMerge(
-        "flex items-center gap-1 !bg-[#FFFFFF1A] text-white py-5",
+        "flex items-center gap-1 !bg-[#FFFFFF1A] text-white py-3 rounded-md",
         className
       )}
     >
