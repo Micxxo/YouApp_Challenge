@@ -51,10 +51,7 @@ const ManageHomePage = () => {
         {isFetching || isLoading || status === "loading" ? (
           <Skeleton className="h-5 w-20 mx-auto relative" />
         ) : (
-          <p
-            className="text-center font-semibold text-sm"
-            onClick={() => signOut()}
-          >
+          <p className="text-center font-semibold text-sm">
             @{data?.data?.username}
           </p>
         )}
