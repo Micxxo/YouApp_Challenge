@@ -7,11 +7,7 @@ type providersProps = {
 };
 
 const Providers = ({ children }: providersProps) => {
-  return (
-    <SessionProvider refetchOnWindowFocus basePath="/next/api/auth">
-      {children}
-    </SessionProvider>
-  );
+  return <SessionProvider>{children}</SessionProvider>;
 };
 
 export default Providers;

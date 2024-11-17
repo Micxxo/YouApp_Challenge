@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,8 +13,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import toastHelper from "@/helpers/toastHelper";
+import { registerHooks } from "@/services/hooks/auth/register";
+import { signIn } from "next-auth/react";
+import { loginHooks } from "@/services/hooks/auth/login";
+import { useRouter } from "next/navigation";
 
 const ManageRegisterPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -25,15 +33,47 @@ const ManageRegisterPage = () => {
     },
   });
 
-  const onSubmit = (value: z.infer<typeof registerSchema>) => {
-    console.log(value);
+  const onSubmit = async (value: z.infer<typeof registerSchema>) => {
+    setLoading(true);
+    const loadingToast = toastHelper("loading...", "loading");
+
+    const res = await registerHooks({
+      email: value.email,
+      username: value.username,
+      password: value.password,
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      if (data.message === "User already exists")
+        toastHelper(data.message, "error", "", loadingToast);
+      else {
+        const login = await loginHooks({
+          keyword: value.email,
+          password: value.password,
+        });
+        if (login?.ok) router.push("/");
+        else toastHelper(login?.error ?? "", "error", "", loadingToast);
+        setLoading(false);
+      }
+    } else {
+      if (Array.isArray(data.message)) {
+        const errorMessages = data.message
+          .map((error: string) => `${error}`)
+          .join(", ");
+        toastHelper("Error", "error", errorMessages, loadingToast);
+      } else toastHelper(data.message, "error", "", loadingToast);
+      setLoading(false);
+    }
   };
 
   const isButtonDisabled =
     form.getValues().email === "" ||
     form.getValues().username === "" ||
     form.getValues().password === "" ||
-    form.getValues().confirmPassword === "";
+    form.getValues().confirmPassword === "" ||
+    loading;
 
   return (
     <div className="text-white">
@@ -119,7 +159,7 @@ const ManageRegisterPage = () => {
                 size="lg"
                 disabled={isButtonDisabled}
               >
-                Login
+                Register
               </Button>
               {!isButtonDisabled && (
                 <div className="absolute top-8 w-full h-[30px] bg-glow-gradient-50 blur-[20px] fade-in-50"></div>
