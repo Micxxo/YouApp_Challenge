@@ -32,7 +32,6 @@ yarn-error.log*
 .vercel
 
 # PWA specific files (like the cache or manifest)
-/public/manifest.json
 /public/service-worker.js
 /public/workbox-*
 
