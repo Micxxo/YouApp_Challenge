@@ -35,7 +35,7 @@ const ManageLoginPage = () => {
     try {
       const res = await loginHooks(value);
       if (res?.ok) {
-        // router.push("/");
+        router.push("/");
       } else {
         toastHelper(res?.error ?? "", "error", "", loadingToast);
       }

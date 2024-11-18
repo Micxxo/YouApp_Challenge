@@ -12,6 +12,5 @@ export const loginHooks = async ({ keyword, password }: loginProps) => {
     password: password,
   });
 
-  localStorage.setItem("tes", JSON.stringify(signInPromise));
   return signInPromise;
 };
