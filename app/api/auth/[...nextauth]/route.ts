@@ -32,6 +32,7 @@ const authOptions: AuthOptions = {
         });
 
         const data = await res.json();
+        localStorage.setItem("tes", JSON.stringify(data));
 
         if (res.ok && data.access_token) {
           const user: User = {

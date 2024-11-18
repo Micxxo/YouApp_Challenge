@@ -37,7 +37,6 @@ const ManageLoginPage = () => {
       if (res?.ok) {
         // router.push("/");
       } else {
-        localStorage.setItem("tes", JSON.stringify(res));
         toastHelper(res?.error ?? "", "error", "", loadingToast);
       }
     } finally {
