@@ -48,11 +48,19 @@ const useUpdateProfile = () => {
   const { updateProfile } = useProfileAPIRequest();
 
   return useMutation<ApiResponse<Profile>, ErrorResponse, ProfilePostProps>({
-    mutationFn: async ({ birthday, height, interests, username, weight }) => {
+    mutationFn: async ({
+      birthday,
+      height,
+      interests,
+      username,
+      weight,
+      name,
+    }) => {
       try {
         return await updateProfile({
           birthday,
           height,
+          name,
           interests,
           username,
           weight,

@@ -10,6 +10,7 @@ import toastHelper from "@/helpers/toastHelper";
 import { useQueryClient } from "react-query";
 import { ApiResponse, ProfilePostProps } from "@/types/service";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 const ManageInterestPage = () => {
   const router = useRouter();
@@ -41,6 +42,10 @@ const ManageInterestPage = () => {
     const loadingToast = toastHelper("updating...", "loading");
 
     const payload: ProfilePostProps = {
+      birthday: format(
+        new Date(getExistedData?.data.birthday ?? ""),
+        "MM-dd-yyyy"
+      ),
       interests: selectables,
     };
 

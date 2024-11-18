@@ -43,7 +43,10 @@ const ProfileViewer = ({ className }: ProfileViewerProps) => {
         </div>
         <div className="absolute bottom-5 left-5 space-y-2 z-[999] opacity-100">
           <h1 className="font-bold">
-            @{profileStore.profile.username ?? ""}
+            @
+            {profileStore.profile.name !== ""
+              ? profileStore.profile.name
+              : profileStore.profile.username ?? ""}
             {profileStore.profile.birthday
               ? ", " + getAgeHelper(profileStore.profile.birthday)
               : ""}
@@ -63,11 +66,9 @@ const ProfileViewer = ({ className }: ProfileViewerProps) => {
                   title={profileStore.profile.zodiac}
                 />
                 <ProfileBadge
-                  icon={
-                    getHoroscopeIconHelper(
-                      profileStore.profile.horoscope?.toLocaleLowerCase()
-                    ) ?? ""
-                  }
+                  icon={getHoroscopeIconHelper(
+                    profileStore.profile.horoscope?.toLocaleLowerCase()
+                  )}
                   title={profileStore.profile.horoscope}
                 />
               </div>

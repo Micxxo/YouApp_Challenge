@@ -12,6 +12,7 @@ import {
   getStorageDataByEmail,
   updateStoreDataByEmail,
 } from "@/helpers/storageHelper";
+import { Button } from "@/components/ui/button";
 
 const ManageHomePage = () => {
   const { data: session, status, update } = useSession();
@@ -51,9 +52,22 @@ const ManageHomePage = () => {
         {isFetching || isLoading || status === "loading" ? (
           <Skeleton className="h-5 w-20 mx-auto relative" />
         ) : (
-          <p className="text-center font-semibold text-sm">
-            @{data?.data?.username}
-          </p>
+          <div className="flex items-center justify-between w-[60%] ml-auto pr-3">
+            <p className="text-center font-semibold text-sm">
+              @
+              {data?.data?.name !== ""
+                ? data?.data.name
+                : data?.data.username ?? ""}
+            </p>
+
+            <Button
+              type="button"
+              onClick={() => signOut()}
+              className="!p-0 !h-fit !w-fit !bg-transparent"
+            >
+              <p className="text-red-500 text-xs font-medium">Signout</p>
+            </Button>
+          </div>
         )}
         <div className="mt-7 flex-1">
           <div className="w-full h-[30%]">

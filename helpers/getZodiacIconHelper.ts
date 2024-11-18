@@ -1,8 +1,3 @@
-type IconMapping = {
-  zodiac: string;
-  horoscope: string;
-};
-
 export const getHoroscopeIconHelper = (horoscope: string) => {
   switch (horoscope) {
     case "aries":
@@ -40,6 +35,26 @@ export const getZodiacIconHelper = (zodiac: string) => {
       return "lucide:rabbit";
     case "dragon":
       return "fluent-emoji-high-contrast:dragon-face";
+    case "tiger":
+      return "fluent-emoji-high-contrast:tiger-face";
+    case "rat":
+      return "lucide:rat";
+    case "ox":
+      return "fluent-emoji-high-contrast:ox";
+    case "snake":
+      return "codicon:snake";
+    case "horse":
+      return "lucide-lab:horse-head";
+    case "monkey":
+      return "file-icons:monkey";
+    case "goat":
+      return "fluent-emoji-high-contrast:goat";
+    case "rooster":
+      return "emojione-monotone:rooster";
+    case "dog":
+      return "tabler:dog";
+    case "pig":
+      return "lucide-lab:pig";
     default:
       "";
       break;

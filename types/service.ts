@@ -14,6 +14,7 @@ export interface ErrorResponse {
 
 export interface ProfilePostProps {
   username?: string;
+  name?: string;
   birthday?: string;
   height?: number;
   weight?: number;

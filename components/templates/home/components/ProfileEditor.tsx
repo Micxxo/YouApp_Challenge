@@ -80,7 +80,7 @@ const ProfileEditor = () => {
         : undefined,
       gender: existedGender ?? profileStore.profile.gender ?? "",
       height: parseInt(profileStore.profile.height) ?? undefined,
-      name: profileStore.profile.username ?? "",
+      name: profileStore.profile.name ?? "",
       weight: parseInt(profileStore.profile.weight) ?? "",
       zodiac: profileStore.profile.zodiac ?? "",
       horoscope: profileStore.profile.horoscope ?? "",
@@ -102,6 +102,7 @@ const ProfileEditor = () => {
       height: value.height,
       interests: profileStore.profile.interests,
       username: value.name,
+      name: value.name,
       weight: value.weight,
     };
 
@@ -420,6 +421,9 @@ const ProfileEditor = () => {
                                 value && profileForm.setValue("birthday", value)
                               }
                               initialFocus
+                              defaultMonth={
+                                field.value || new Date("2000-01-01")
+                              }
                             />
                           </PopoverContent>
                         </Popover>

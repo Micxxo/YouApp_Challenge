@@ -10,6 +10,7 @@ const useProfileStore = create<profileProps>((set) => ({
     picture: "",
     birthday: new Date(),
     email: "",
+    name: "",
     height: "",
     gender: "",
     horoscope: "",
