@@ -23,10 +23,6 @@ const handleProtectedPaths = async (
   return null;
 };
 
-export default withAuth({
-  secret: process.env.NEXTAUTH_SECRET,
-});
-
 export const middleware = async (req: NextRequest) => {
   const token = await getToken({ req, secret: process.env.NEXT_PUBLIC_SECRET });
   const { pathname } = req.nextUrl;
@@ -41,3 +37,7 @@ export const middleware = async (req: NextRequest) => {
 
   return NextResponse.next();
 };
+
+export default withAuth({
+  secret: process.env.NEXTAUTH_SECRET,
+});
