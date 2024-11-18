@@ -18,6 +18,9 @@ const ManageInterestPage = () => {
   const getExistedData: ApiResponse<Profile> | undefined =
     queryClient.getQueryData("getProfile");
   const existedInterest = getExistedData?.data.interests;
+  const existedBirthday = getExistedData?.data.birthday
+    ? format(new Date(getExistedData?.data.birthday ?? ""), "MM-dd-yyyy")
+    : "";
 
   const [inputValue, setInputValue] = useState<string>("");
   const [selectables, setSelectables] = useState<Array<string>>(
@@ -42,10 +45,7 @@ const ManageInterestPage = () => {
     const loadingToast = toastHelper("updating...", "loading");
 
     const payload: ProfilePostProps = {
-      birthday: format(
-        new Date(getExistedData?.data.birthday ?? ""),
-        "MM-dd-yyyy"
-      ),
+      birthday: existedBirthday,
       interests: selectables,
     };
 

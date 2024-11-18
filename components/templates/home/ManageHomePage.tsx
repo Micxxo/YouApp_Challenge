@@ -54,10 +54,7 @@ const ManageHomePage = () => {
         ) : (
           <div className="flex items-center justify-between w-[60%] ml-auto pr-3">
             <p className="text-center font-semibold text-sm">
-              @
-              {data?.data?.name !== ""
-                ? data?.data.name
-                : data?.data.username ?? ""}
+              @{data?.data.name ?? data?.data.username ?? ""}
             </p>
 
             <Button

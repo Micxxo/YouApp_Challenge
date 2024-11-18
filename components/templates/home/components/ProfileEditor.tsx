@@ -70,6 +70,7 @@ const ProfileEditor = () => {
     existedPfp ?? profileStore.profile.picture ?? null
   );
   const updateProfile = useUpdateProfile();
+  const createProfile = useCreateProfile();
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -106,36 +107,69 @@ const ProfileEditor = () => {
       weight: value.weight,
     };
 
-    updateProfile.mutateAsync(payload, {
-      onSuccess: (data) => {
-        const dataToStore: Profile = {
-          ...data.data,
-          gender: profileForm.getValues().gender,
-          picture: profileForm.getValues().profile,
-        };
+    {
+      isProfileCreated
+        ? updateProfile.mutateAsync(payload, {
+            onSuccess: (data) => {
+              const dataToStore: Profile = {
+                ...data.data,
+                gender: profileForm.getValues().gender,
+                picture: profileForm.getValues().profile,
+              };
 
-        profileStore.setProfile(dataToStore);
-        updateStoreDataByEmail(session?.user.email ?? "", {
-          gender: dataToStore.gender ?? "",
-          pfp: dataToStore.picture ?? "",
-        });
+              profileStore.setProfile(dataToStore);
+              updateStoreDataByEmail(session?.user.email ?? "", {
+                gender: dataToStore.gender ?? "",
+                pfp: dataToStore.picture ?? "",
+              });
 
-        sessionUpdate({
-          ...session,
-          user: {
-            ...session?.user,
-            gender: dataToStore.gender,
-          },
-        });
+              sessionUpdate({
+                ...session,
+                user: {
+                  ...session?.user,
+                  gender: dataToStore.gender,
+                },
+              });
 
-        queryClient.invalidateQueries();
-        toastHelper(data.message, "success", "", loadingToast);
-      },
-      onError: (error) => {
-        console.error("Error updating profile:", error);
-        toastHelper("Error updating profile", "error", "", loadingToast);
-      },
-    });
+              queryClient.invalidateQueries();
+              toastHelper(data.message, "success", "", loadingToast);
+            },
+            onError: (error) => {
+              console.error("Error updating profile:", error);
+              toastHelper("Error updating profile", "error", "", loadingToast);
+            },
+          })
+        : createProfile.mutateAsync(payload, {
+            onSuccess: (data) => {
+              const dataToStore: Profile = {
+                ...data.data,
+                gender: profileForm.getValues().gender,
+                picture: profileForm.getValues().profile,
+              };
+
+              profileStore.setProfile(dataToStore);
+              updateStoreDataByEmail(session?.user.email ?? "", {
+                gender: dataToStore.gender ?? "",
+                pfp: dataToStore.picture ?? "",
+              });
+
+              sessionUpdate({
+                ...session,
+                user: {
+                  ...session?.user,
+                  gender: dataToStore.gender,
+                },
+              });
+
+              queryClient.invalidateQueries();
+              toastHelper(data.message, "success", "", loadingToast);
+            },
+            onError: (error) => {
+              console.error("Error updating profile:", error);
+              toastHelper("Error updating profile", "error", "", loadingToast);
+            },
+          });
+    }
   };
 
   return (

@@ -16,7 +16,7 @@ const useGetProfile = ({ enabled = true }: servicesParams) => {
       try {
         return await getProfile();
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     },
     enabled,
@@ -27,18 +27,26 @@ const useGetProfile = ({ enabled = true }: servicesParams) => {
 const useCreateProfile = () => {
   const { createProfile } = useProfileAPIRequest();
 
-  return useMutation<void, ErrorResponse, ProfilePostProps>({
-    mutationFn: async ({ birthday, height, interests, username, weight }) => {
+  return useMutation<ApiResponse<Profile>, ErrorResponse, ProfilePostProps>({
+    mutationFn: async ({
+      birthday,
+      height,
+      interests,
+      username,
+      weight,
+      name,
+    }) => {
       try {
-        await createProfile({
+        return await createProfile({
           birthday,
           height,
+          name,
           interests,
           username,
           weight,
         });
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     },
   });
@@ -66,7 +74,7 @@ const useUpdateProfile = () => {
           weight,
         });
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     },
   });
