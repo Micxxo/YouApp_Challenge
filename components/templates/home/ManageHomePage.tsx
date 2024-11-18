@@ -61,9 +61,6 @@ const ManageHomePage = () => {
             @{data?.data?.username}
           </p>
         )}
-        NEXT_PUBLIC_SECRET {process.env.NEXT_PUBLIC_SECRET}
-        NEXTAUTH_URL{process.env.NEXTAUTH_URL}
-        NEXTAUTH_SECRET {process.env.NEXTAUTH_SECRET}
         <div className="mt-7 flex-1">
           <div className="w-full h-[30%]">
             {isFetching || isLoading || status === "loading" ? (
