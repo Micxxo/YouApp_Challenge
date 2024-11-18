@@ -45,12 +45,6 @@ const ManageHomePage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log("NEXT_PUBLIC_SECRET " + process.env.NEXT_PUBLIC_SECRET);
-    console.log("NEXTAUTH_URL " + process.env.NEXTAUTH_URL);
-    console.log("NEXTAUTH_SECRET " + process.env.NEXTAUTH_SECRET);
-  }, []);
-
   return (
     <HomeLayout>
       <div className="w-full h-[90%] flex flex-col">
