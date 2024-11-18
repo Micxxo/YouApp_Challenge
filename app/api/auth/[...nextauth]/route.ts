@@ -33,7 +33,6 @@ const authOptions: AuthOptions = {
 
         const data = await res.json();
 
-        console.log(data);
         if (res.ok && data.access_token) {
           const user: User = {
             id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

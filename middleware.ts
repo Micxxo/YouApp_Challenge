@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
 const protectedPaths = ["/", "/interest", "api/auth/error"];
 
@@ -21,6 +22,10 @@ const handleProtectedPaths = async (
   }
   return null;
 };
+
+export default withAuth({
+  secret: process.env.NEXTAUTH_SECRET,
+});
 
 export const middleware = async (req: NextRequest) => {
   const token = await getToken({ req, secret: process.env.NEXT_PUBLIC_SECRET });
